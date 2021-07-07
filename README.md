@@ -1,3 +1,3 @@
 # Super-spreader_paper
 
-Edited Version 3
+Welcome to the super-spreader project!
