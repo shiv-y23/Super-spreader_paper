@@ -1,21 +1,6 @@
 
-#For changing village name:
-#1. change Deg_ variable
-#2. change conn_ variable
-#3. Change village name
-#4. check the xmm files
-#5. check bmi import file #6. Simulations - change line 435,437,499
-
-#library('igraph',lib.loc="/home/ly266/project/conda_pkgs")
-## Plotting free_time
-xmm<-read.csv('hw3_conn_v3_subset_s_shridhar_2021-03-30.csv')
-xmm3<-read.csv('hw3_resp_v3_subset_s_shridhar_2021-03-30.csv')
-
-#xmm<-read.csv('xmm_c.csv') # only for Hacienda San Juan
-#xmm3<-read.csv('xmm3_c.csv')
-
-#xmm<-read.csv('xmm_me.csv')#only for Mecatal
-#xmm3<-read.csv('xmm3_me.csv')
+xmm<-read.csv('input_respondent.csv') #Respondent dataset (individual attributes)
+xmm3<-read.csv('input_conn.csv') #Connection dataset (edge attributes
 
 
 resp<-xmm3[,1:dim(xmm3)[2]]
@@ -36,7 +21,7 @@ conn_t <- subset(conn_t, conn_t$relationship == "free_time"
                  |conn_t$relationship == "father"
                  |conn_t$relationship == "partner"
 )
-conn_temp <- subset(conn_t, conn_t$village_name_w3 == "Hacienda San Juan")
+conn_temp <- subset(conn_t, conn_t$village_name_w3 == "Hacienda San Juan") #Example village - Hacienda San Juan
 
 temp <- conn_temp[c("alter")] # select alter column
 colnames(temp)[1] <-"ego"  # rename the column as alter
@@ -242,11 +227,6 @@ ss <- ifelse(Deg_hacienda_san_juan$Salutation>3 & Deg_hacienda_san_juan$Frequenc
 Deg_hacienda_san_juan<-cbind(Deg_hacienda_san_juan,as.data.frame(ss))
 colnames(Deg_hacienda_san_juan)<-c("name","Salutation","Frequency","Meal","Super_Spreaders")
 
-
-
-write.csv(Deg_hacienda_san_juan,"Hacienda San Juan-variables.csv")
-write.csv(conn_hacienda_san_juan,"Hacienda San Juan-conn-vars.csv")
-
 ## PLotting super spreaders
 
 conn_t <- subset(conn_i, conn_i$alter_source == 1 | conn_i$alter_source == 3) # subsetting or selecting elements with mathching rows
@@ -313,7 +293,7 @@ conn_temp2$gender <- with(village_lookup, gender[match(conn_temp2$ego, responden
 
 colnames(conn_temp2)<-c("ego","alter","Salutation","Frequency","age","gender")
 
-conn_hacienda_san_juan<-conn_temp2## Risky line 04-06-21
+conn_hacienda_san_juan<-conn_temp2
 
 conn_hacienda_san_juan$age <- ifelse(is.na(conn_hacienda_san_juan$age),15,conn_hacienda_san_juan$age)
 conn_hacienda_san_juan$gender <- ifelse(is.na(conn_hacienda_san_juan$gender),"female",conn_hacienda_san_juan$gender)
@@ -422,15 +402,6 @@ xd3=0
 xd4=0
 sim_runs=100
 
-# Starts here
-#library(foreach)
-#library(doParallel)
-#unregisterDoParallel
-#registerDoSEQ()
-
-#xf_all<-matrix(0,sim_runs*dim(vtable)[1],dim(vtable)[1])
-#dim(xf_all)
-
 xly<-1 #starting seeded node
 
 for(tio in xly:dim(vtable)[1]){  #dim(vtable)[1]
@@ -444,7 +415,7 @@ for(tio in xly:dim(vtable)[1]){  #dim(vtable)[1]
     
     inf_nod[1:time,cho_node]=1 #seeded
     time_trans<-matrix(0,1,dim(vtable)[1])# transmitting time (from characteristic equation) ----only 1 column for storing real time of infection transmission
-    time_trans[cho_node]=time_trans[cho_node]+1 #need to differentiate between transmission and getting infected
+    time_trans[cho_node]=time_trans[cho_node]+1 #to differentiate between transmission and getting infected
     
     for(t in 1:time){
       for (i in 1:dim(vtable)[1]){
@@ -495,8 +466,8 @@ for(tio in xly:dim(vtable)[1]){  #dim(vtable)[1]
   
 }
 
-write.csv(as.data.frame(xf_all),"Flu-Hacienda San Juan-sim-4-new-1000-dist1-50.csv") # need to run from 14 - 85
+write.csv(as.data.frame(xf_all),"Flu-Hacienda San Juan-sim.csv") 
 
-dim(xf_all)
+
 
 
